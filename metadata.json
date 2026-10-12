@@ -1,0 +1,6 @@
+{
+  "name": "AgriKnowledge Hub",
+  "description": "Comprehensive agricultural advisory, farmer community feed, market prices, crop & livestock guides, and AI farm diagnostics for East Africa.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
