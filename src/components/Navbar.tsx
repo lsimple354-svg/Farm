@@ -2,7 +2,10 @@ import React, { useState } from 'react';
 import type { Page } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useAuth } from '../context/AuthContext';
+import { useNotifications } from '../context/NotificationContext';
+import { useInternational } from '../context/InternationalContext';
 import { COUNTIES } from '../data/mockData';
+import { NotificationPanel } from './NotificationPanel';
 import {
   Sprout,
   Search,
@@ -23,6 +26,14 @@ import {
   Store,
   Compass,
   Sparkles,
+  Bell,
+  MessageSquare,
+  PlaySquare,
+  DollarSign,
+  Info,
+  Scale,
+  LogOut,
+  PhoneCall,
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -42,39 +53,50 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { language, setLanguage, t } = useLanguage();
   const { user } = useAuth();
+  const { unreadCount } = useNotifications();
+  const { country, setCountry, currency, setCurrency, units, setUnits } = useInternational();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState<'guides' | 'tools' | 'more' | null>(null);
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<'guides' | 'tools' | 'more' | 'user' | null>(null);
 
   const handleNav = (page: Page) => {
     setCurrentPage(page);
     setMobileMenuOpen(false);
     setDropdownOpen(null);
+    setNotificationsOpen(false);
+  };
+
+  const handleNotificationNavigate = (page: Page, targetId?: string) => {
+    setCurrentPage(page);
+    setNotificationsOpen(false);
   };
 
   return (
-    <nav className="bg-[#183D29] text-[#FAF7F0] border-b border-emerald-900/60 sticky top-10 sm:top-10 z-40 shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Brand Logo */}
-          <div className="flex items-center gap-3">
+    <nav className="bg-[#183D29] text-[#FAF7F0] border-b border-emerald-900/60 sticky top-0 sm:top-10 z-40 shadow-md">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 gap-2">
+          {/* Brand Logo - Strictly independent layout space with shrink-0 */}
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => handleNav('home')}
-              className="flex items-center gap-2.5 group text-left"
+              className="flex items-center gap-2 group text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-emerald-400 rounded-xl p-1"
+              aria-label="AgriKnowledge Hub Home"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
-                <Sprout className="w-6 h-6" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform shrink-0">
+                <Sprout className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div>
-                <div className="flex items-center gap-1.5">
-                  <span className="font-serif font-black text-lg tracking-tight text-[#FAF7F0]">
+              <div className="leading-tight">
+                <div className="flex items-center gap-1 sm:gap-1.5">
+                  <span className="font-serif font-black text-base sm:text-lg tracking-tight text-[#FAF7F0]">
                     AgriKnowledge
                   </span>
-                  <span className="text-emerald-400 font-bold text-xs bg-emerald-950/80 px-1.5 py-0.5 rounded border border-emerald-800">
+                  <span className="text-emerald-400 font-bold text-[10px] sm:text-xs bg-emerald-950/80 px-1 py-0.2 rounded border border-emerald-800">
                     HUB
                   </span>
                 </div>
-                <p className="text-[10px] text-emerald-200/80 tracking-wide font-medium hidden sm:block">
-                  East Africa Smart Farming Advisory
+                <p className="text-[9px] sm:text-[10px] text-emerald-300 tracking-wide font-medium hidden xs:block">
+                  Worldwide Farming Advisory
                 </p>
               </div>
             </button>
@@ -84,39 +106,66 @@ export const Navbar: React.FC<NavbarProps> = ({
           <div className="hidden lg:flex items-center gap-1 text-sm font-medium">
             <button
               onClick={() => handleNav('home')}
-              className={`px-3 py-1.5 rounded-lg transition ${
+              className={`px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
                 currentPage === 'home'
                   ? 'bg-emerald-800 text-white font-semibold'
-                  : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
               }`}
             >
               {t('home')}
             </button>
 
+            {/* AgriFeed Community */}
             <button
               onClick={() => handleNav('community')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
                 currentPage === 'community'
                   ? 'bg-emerald-800 text-white font-semibold'
-                  : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
               }`}
             >
               <Users className="w-4 h-4 text-emerald-300" />
-              <span>{t('community')}</span>
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span>AgriFeed</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </button>
+
+            {/* AgriReels (Phase 4) */}
+            <button
+              onClick={() => handleNav('reels')}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
+                currentPage === 'reels'
+                  ? 'bg-emerald-800 text-white font-semibold'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
+              }`}
+            >
+              <PlaySquare className="w-4 h-4 text-amber-300" />
+              <span>AgriReels</span>
+            </button>
+
+            {/* AgriAcademy (Phase 6) */}
+            <button
+              onClick={() => handleNav('learning')}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
+                currentPage === 'learning'
+                  ? 'bg-emerald-800 text-white font-semibold'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
+              }`}
+            >
+              <Compass className="w-4 h-4 text-emerald-300" />
+              <span>Academy</span>
             </button>
 
             {/* Guides Dropdown */}
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(dropdownOpen === 'guides' ? null : 'guides')}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition ${
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
                   ['crops', 'livestock', 'soil-water', 'pests'].includes(currentPage)
                     ? 'bg-emerald-800 text-white font-semibold'
-                    : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                    : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
                 }`}
               >
-                <span>Farming Guides</span>
+                <span>Guides</span>
                 <ChevronDown className="w-3.5 h-3.5 opacity-70" />
               </button>
 
@@ -127,78 +176,80 @@ export const Navbar: React.FC<NavbarProps> = ({
                 >
                   <button
                     onClick={() => handleNav('crops')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Sprout className="w-4 h-4 text-emerald-400" />
                     <div>
                       <div className="font-semibold text-stone-100">{t('crops')}</div>
-                      <div className="text-[10px] text-stone-400">Maize, avocado, tubers & horticulture</div>
+                      <div className="text-[10px] text-stone-400">Maize, avocado, tubers & legumes</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('livestock')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Layers className="w-4 h-4 text-emerald-400" />
                     <div>
                       <div className="font-semibold text-stone-100">{t('livestock')}</div>
-                      <div className="text-[10px] text-stone-400">Dairy, poultry, goats, bees</div>
+                      <div className="text-[10px] text-stone-400">Dairy, poultry, goats, pigs, bees</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('soil-water')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Sparkles className="w-4 h-4 text-cyan-400" />
                     <div>
                       <div className="font-semibold text-stone-100">{t('soilWater')}</div>
-                      <div className="text-[10px] text-stone-400">Drip, pH testing, rainwater</div>
+                      <div className="text-[10px] text-stone-400">Soil fertility & precision drip</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('pests')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <ShieldAlert className="w-4 h-4 text-rose-400" />
                     <div>
                       <div className="font-semibold text-rose-300">{t('pests')}</div>
-                      <div className="text-[10px] text-stone-400">Armyworm, Tuta, Blight control</div>
+                      <div className="text-[10px] text-stone-400">Pest doctor & disease diagnosis</div>
                     </div>
                   </button>
                 </div>
               )}
             </div>
 
+            {/* Calculators (26 Direct Precision Tools) */}
             <button
-              onClick={() => handleNav('weather')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition ${
-                currentPage === 'weather'
+              onClick={() => handleNav('calculators')}
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
+                currentPage === 'calculators'
                   ? 'bg-emerald-800 text-white font-semibold'
-                  : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
               }`}
             >
-              <CloudSun className="w-4 h-4 text-sky-300" />
-              <span>Weather</span>
+              <Calculator className="w-4 h-4 text-emerald-300" />
+              <span>Calculators (26)</span>
             </button>
 
+            {/* Markets */}
             <button
               onClick={() => handleNav('markets')}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
                 currentPage === 'markets'
                   ? 'bg-emerald-800 text-white font-semibold'
-                  : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                  : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
               }`}
             >
               <TrendingUp className="w-4 h-4 text-amber-300" />
-              <span>{t('markets')}</span>
+              <span>AgriMarket</span>
             </button>
 
             {/* AI Assistant */}
             <button
               onClick={() => handleNav('ai-assistant')}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition border ${
+              className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition border cursor-pointer ${
                 currentPage === 'ai-assistant'
-                  ? 'bg-emerald-500 text-emerald-950 font-bold border-emerald-400 shadow-md'
+                  ? 'bg-emerald-500 text-emerald-950 font-bold border-emerald-400 shadow-sm'
                   : 'bg-emerald-900/80 text-emerald-200 border-emerald-700/60 hover:bg-emerald-800 hover:text-white'
               }`}
             >
@@ -210,13 +261,15 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(dropdownOpen === 'tools' ? null : 'tools')}
-                className={`flex items-center gap-1 px-3 py-1.5 rounded-lg transition ${
-                  ['calculators', 'farm-manager', 'suppliers', 'events', 'learning'].includes(currentPage)
+                className={`flex items-center gap-1 px-2.5 py-1.5 rounded-lg transition cursor-pointer ${
+                  ['farm-manager', 'suppliers', 'events', 'opportunities', 'farm-business', 'sustainable'].includes(
+                    currentPage
+                  )
                     ? 'bg-emerald-800 text-white font-semibold'
-                    : 'text-emerald-100/90 hover:text-white hover:bg-emerald-900/40'
+                    : 'text-emerald-100 hover:text-white hover:bg-emerald-900/40'
                 }`}
               >
-                <span>Tools & Hub</span>
+                <span>More</span>
                 <ChevronDown className="w-3.5 h-3.5 opacity-70" />
               </button>
 
@@ -226,38 +279,28 @@ export const Navbar: React.FC<NavbarProps> = ({
                   onMouseLeave={() => setDropdownOpen(null)}
                 >
                   <button
-                    onClick={() => handleNav('calculators')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
-                  >
-                    <Calculator className="w-4 h-4 text-emerald-400" />
-                    <div>
-                      <div className="font-semibold text-stone-100">{t('calculators')}</div>
-                      <div className="text-[10px] text-stone-400">Seed, fertilizer & feed rations</div>
-                    </div>
-                  </button>
-                  <button
                     onClick={() => handleNav('farm-manager')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Layers className="w-4 h-4 text-amber-400" />
                     <div>
                       <div className="font-semibold text-stone-100">{t('farmManager')}</div>
-                      <div className="text-[10px] text-stone-400">Track tasks & harvest finances</div>
+                      <div className="text-[10px] text-stone-400">Track tasks & harvest budgets</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('suppliers')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Store className="w-4 h-4 text-sky-400" />
                     <div>
-                      <div className="font-semibold text-stone-100">{t('suppliers')}</div>
-                      <div className="text-[10px] text-stone-400">Verified agro-dealers & vets</div>
+                      <div className="font-semibold text-stone-100">Certified Agro-Dealers</div>
+                      <div className="text-[10px] text-stone-400">Verified seed & equipment</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('events')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Calendar className="w-4 h-4 text-rose-400" />
                     <div>
@@ -266,58 +309,39 @@ export const Navbar: React.FC<NavbarProps> = ({
                     </div>
                   </button>
                   <button
-                    onClick={() => handleNav('learning')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
-                  >
-                    <Compass className="w-4 h-4 text-emerald-300" />
-                    <div>
-                      <div className="font-semibold text-stone-100">{t('learning')}</div>
-                      <div className="text-[10px] text-stone-400">Masterclasses & GAP guides</div>
-                    </div>
-                  </button>
-                  <button
                     onClick={() => handleNav('opportunities')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <TrendingUp className="w-4 h-4 text-emerald-400" />
                     <div>
                       <div className="font-semibold text-stone-100">{t('opportunities')}</div>
-                      <div className="text-[10px] text-stone-400">Fertilizer e-voucher & youth grants</div>
-                    </div>
-                  </button>
-                  <button
-                    onClick={() => handleNav('farm-business')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
-                  >
-                    <Store className="w-4 h-4 text-emerald-300" />
-                    <div>
-                      <div className="font-semibold text-stone-100">{t('farmBusiness')}</div>
-                      <div className="text-[10px] text-stone-400">Contract farming & value addition</div>
+                      <div className="text-[10px] text-stone-400">Grants, subsidies & youth funding</div>
                     </div>
                   </button>
                   <button
                     onClick={() => handleNav('sustainable')}
-                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium"
+                    className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2.5 text-xs font-medium cursor-pointer"
                   >
                     <Sparkles className="w-4 h-4 text-emerald-400" />
                     <div>
-                      <div className="font-semibold text-stone-100">{t('sustainable')}</div>
-                      <div className="text-[10px] text-stone-400">Regenerative soil & carbon credits</div>
+                      <div className="font-semibold text-stone-100">Regenerative Farming</div>
+                      <div className="text-[10px] text-stone-400">Soil carbon & push-pull</div>
                     </div>
                   </button>
                   <div className="border-t border-stone-800 my-1 pt-1">
                     <button
-                      onClick={() => handleNav('admin-cms')}
-                      className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-emerald-950 flex items-center justify-between text-xs text-stone-300"
+                      onClick={() => handleNav('about')}
+                      className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs text-stone-300 cursor-pointer"
                     >
-                      <span>Extension Officer Portal</span>
-                      <span className="text-[10px] bg-emerald-900 text-emerald-300 px-1.5 py-0.5 rounded">CMS</span>
+                      <Info className="w-3.5 h-3.5 text-stone-400" />
+                      <span>About AgriKnowledge Hub</span>
                     </button>
                     <button
-                      onClick={() => handleNav('about')}
-                      className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-emerald-950 text-xs text-stone-400"
+                      onClick={() => handleNav('legal')}
+                      className="w-full text-left px-3 py-1.5 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs text-stone-300 cursor-pointer"
                     >
-                      About the Hub
+                      <Scale className="w-3.5 h-3.5 text-stone-400" />
+                      <span>Kenya DPA 2019 & Terms</span>
                     </button>
                   </div>
                 </div>
@@ -325,16 +349,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </div>
 
-          {/* Right Action Icons: County Selector, Language Toggle, Search, Profile */}
-          <div className="flex items-center gap-2">
-            {/* County Selector */}
-            <div className="hidden sm:flex items-center gap-1 bg-[#112d1e] border border-emerald-800/80 px-2 py-1.5 rounded-xl text-xs">
-              <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+          {/* Right Action Icons: Independent layout spaces */}
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 relative">
+            {/* Country / Location Selector */}
+            <div className="hidden md:flex items-center gap-1 bg-[#112d1e] border border-emerald-800/80 px-2 py-1.5 rounded-xl text-xs">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <select
                 value={selectedCounty}
                 onChange={(e) => setSelectedCounty(e.target.value)}
-                className="bg-transparent text-emerald-100 text-xs font-medium focus:outline-hidden cursor-pointer"
-                title="Select County"
+                className="bg-transparent text-emerald-100 text-xs font-medium focus:outline-none cursor-pointer max-w-[110px] truncate"
+                title="Select County / Region"
+                aria-label="Select County / Region"
               >
                 {COUNTIES.map((county) => (
                   <option key={county} value={county} className="bg-stone-900 text-stone-100">
@@ -347,45 +372,149 @@ export const Navbar: React.FC<NavbarProps> = ({
             {/* Global Search Button */}
             <button
               onClick={openSearchModal}
-              className="p-2 rounded-xl bg-emerald-900/60 hover:bg-emerald-800 border border-emerald-700/60 text-emerald-200 hover:text-white transition"
-              title="Search Hub"
+              className="p-2 rounded-xl bg-emerald-900/60 hover:bg-emerald-800 border border-emerald-700/60 text-emerald-200 hover:text-white transition cursor-pointer"
+              title="Global Search"
+              aria-label="Search AgriKnowledge Hub"
             >
               <Search className="w-4 h-4" />
             </button>
 
-            {/* Language Switcher */}
+            {/* Direct Messages Icon Button (Phase 5) */}
             <button
-              onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')}
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-[#112d1e] hover:bg-emerald-900/80 border border-emerald-800/80 text-xs font-semibold text-emerald-200 transition"
-              title="Switch Language"
+              onClick={() => handleNav('messages')}
+              className={`p-2 rounded-xl border transition relative cursor-pointer ${
+                currentPage === 'messages'
+                  ? 'bg-emerald-700 border-white text-white'
+                  : 'bg-[#112d1e] hover:bg-emerald-900/80 border-emerald-800/80 text-emerald-200 hover:text-white'
+              }`}
+              title="Direct Messages & Farming Groups"
+              aria-label="Direct Messages"
             >
-              <Globe className="w-3.5 h-3.5 text-emerald-400" />
-              <span>{language === 'en' ? 'SW' : 'EN'}</span>
+              <MessageSquare className="w-4 h-4" />
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-2 ring-stone-900" />
             </button>
 
-            {/* User Profile avatar */}
-            <button
-              onClick={() => handleNav('profile')}
-              className={`flex items-center gap-2 p-1 pl-1.5 pr-2.5 rounded-xl border transition ${
-                currentPage === 'profile'
-                  ? 'bg-emerald-700 border-white text-white'
-                  : 'bg-[#112d1e] hover:bg-emerald-900/80 border-emerald-800/80 text-emerald-100'
-              }`}
-            >
-              <img
-                src={user.avatar}
-                alt={user.name}
-                className="w-7 h-7 rounded-full object-cover border border-emerald-400"
+            {/* Notification Bell Button (Fixes defect: independent position, non-overlapping) */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setNotificationsOpen(!notificationsOpen);
+                }}
+                className={`p-2 rounded-xl border transition relative cursor-pointer ${
+                  notificationsOpen
+                    ? 'bg-emerald-600 border-white text-white'
+                    : 'bg-[#112d1e] hover:bg-emerald-900/80 border-emerald-800/80 text-emerald-200 hover:text-white'
+                }`}
+                title="View Notifications"
+                aria-label={`Notifications (${unreadCount} unread)`}
+                aria-expanded={notificationsOpen}
+              >
+                <Bell className="w-4 h-4" />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-amber-500 text-stone-950 font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center ring-2 ring-stone-900">
+                    {unreadCount}
+                  </span>
+                )}
+              </button>
+
+              {/* Notification Panel Mount */}
+              <NotificationPanel
+                isOpen={notificationsOpen}
+                onClose={() => setNotificationsOpen(false)}
+                onNavigate={handleNotificationNavigate}
               />
-              <span className="text-xs font-medium hidden md:inline truncate max-w-[90px]">
-                {user.name.split(' ')[0]}
-              </span>
-            </button>
+            </div>
+
+            {/* Currency & Unit Switcher */}
+            <div className="hidden xl:flex items-center gap-1 bg-[#112d1e] border border-emerald-800/80 px-2 py-1 rounded-xl text-[11px] font-semibold text-emerald-200">
+              <button
+                onClick={() => setCurrency(currency === 'KES' ? 'USD' : currency === 'USD' ? 'EUR' : 'KES')}
+                className="hover:text-white cursor-pointer px-1"
+                title="Toggle Currency"
+              >
+                {currency}
+              </button>
+              <span className="text-emerald-700">|</span>
+              <button
+                onClick={() => setUnits(units === 'metric' ? 'imperial' : 'metric')}
+                className="hover:text-white cursor-pointer px-1"
+                title="Toggle Metric/Imperial"
+              >
+                {units === 'metric' ? 'Metric' : 'Imp'}
+              </button>
+            </div>
+
+            {/* User Profile Avatar with Menu */}
+            <div className="relative">
+              <button
+                onClick={() => setDropdownOpen(dropdownOpen === 'user' ? null : 'user')}
+                className={`flex items-center gap-1.5 p-1 pl-1.5 pr-2 rounded-xl border transition cursor-pointer ${
+                  currentPage === 'profile'
+                    ? 'bg-emerald-700 border-white text-white'
+                    : 'bg-[#112d1e] hover:bg-emerald-900/80 border-emerald-800/80 text-emerald-100'
+                }`}
+                aria-label="User Profile Menu"
+              >
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-7 h-7 rounded-full object-cover border border-emerald-400 shrink-0"
+                />
+                <span className="text-xs font-semibold hidden md:inline truncate max-w-[80px]">
+                  {user.name.split(' ')[0]}
+                </span>
+                <ChevronDown className="w-3 h-3 opacity-70 hidden sm:inline" />
+              </button>
+
+              {dropdownOpen === 'user' && (
+                <div
+                  className="absolute right-0 mt-2 w-56 bg-stone-900 text-stone-100 rounded-2xl shadow-2xl border border-stone-700 p-2 z-50 animate-in fade-in"
+                  onMouseLeave={() => setDropdownOpen(null)}
+                >
+                  <div className="px-3 py-2 border-b border-stone-800">
+                    <p className="font-bold text-xs text-white truncate">{user.name}</p>
+                    <p className="text-[10px] text-emerald-400 truncate">{user.role}</p>
+                    <p className="text-[10px] text-stone-400 mt-0.5">{user.county} • {user.reputationPoints} pts</p>
+                  </div>
+                  <div className="py-1">
+                    <button
+                      onClick={() => handleNav('profile')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs font-medium cursor-pointer"
+                    >
+                      <User className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>My Farm Profile</span>
+                    </button>
+                    <button
+                      onClick={() => handleNav('farm-manager')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs font-medium cursor-pointer"
+                    >
+                      <Layers className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Farm Management Dashboard</span>
+                    </button>
+                    <button
+                      onClick={() => handleNav('admin-cms')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs font-medium cursor-pointer"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 text-purple-400" />
+                      <span>Extension Officer Portal</span>
+                    </button>
+                    <button
+                      onClick={() => handleNav('about')}
+                      className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-950 flex items-center gap-2 text-xs font-medium cursor-pointer"
+                    >
+                      <Info className="w-3.5 h-3.5 text-stone-400" />
+                      <span>About Adams K. Kering & Mission</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl bg-emerald-900/80 text-emerald-100"
+              className="lg:hidden p-2 rounded-xl bg-emerald-900/80 text-emerald-100 hover:bg-emerald-800 transition cursor-pointer"
               aria-label="Toggle Navigation Menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -396,14 +525,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Nav Drawer */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-[#112d1e] border-t border-emerald-900 px-4 py-4 space-y-3">
-          <div className="flex items-center justify-between pb-3 border-b border-emerald-800/60">
-            <div className="flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-emerald-400" />
+        <div className="lg:hidden bg-[#112d1e] border-t border-emerald-900 px-4 py-4 space-y-3 max-h-[80vh] overflow-y-auto">
+          {/* Mobile Region & Language Bar */}
+          <div className="flex items-center justify-between pb-3 border-b border-emerald-800/60 gap-2">
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+              <MapPin className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <select
                 value={selectedCounty}
                 onChange={(e) => setSelectedCounty(e.target.value)}
-                className="bg-stone-900 text-stone-100 text-xs px-2 py-1 rounded-lg border border-emerald-700"
+                className="bg-stone-900 text-stone-100 text-xs px-2 py-1 rounded-lg border border-emerald-700 w-full truncate"
               >
                 {COUNTIES.map((c) => (
                   <option key={c} value={c}>
@@ -412,87 +542,134 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ))}
               </select>
             </div>
-            <button
-              onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')}
-              className="flex items-center gap-1 text-xs bg-emerald-950 px-2 py-1 rounded-lg text-emerald-200 border border-emerald-800"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span>{language === 'en' ? 'Swahili' : 'English'}</span>
-            </button>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'sw' : 'en')}
+                className="flex items-center gap-1 text-xs bg-emerald-950 px-2.5 py-1 rounded-lg text-emerald-200 border border-emerald-800 cursor-pointer"
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>{language === 'en' ? 'SW' : 'EN'}</span>
+              </button>
+              <button
+                onClick={() => setCurrency(currency === 'KES' ? 'USD' : 'KES')}
+                className="text-xs bg-emerald-950 px-2 py-1 rounded-lg text-emerald-200 border border-emerald-800 font-semibold cursor-pointer"
+              >
+                {currency}
+              </button>
+            </div>
           </div>
 
+          {/* Quick Grid Navigation */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               onClick={() => handleNav('home')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'home' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'home' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
               🌱 {t('home')}
             </button>
             <button
               onClick={() => handleNav('community')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'community' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'community' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              👥 {t('community')}
+              👥 AgriFeed Community
             </button>
             <button
-              onClick={() => handleNav('crops')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'crops' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('reels')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'reels' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              🌾 {t('crops')}
+              ▶️ AgriReels Videos
             </button>
             <button
-              onClick={() => handleNav('livestock')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'livestock' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('learning')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'learning' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              🐄 {t('livestock')}
+              🎓 AgriAcademy (14)
             </button>
             <button
-              onClick={() => handleNav('pests')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'pests' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('calculators')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'calculators' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              🐛 {t('pests')}
-            </button>
-            <button
-              onClick={() => handleNav('weather')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'weather' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
-            >
-              ⛅ Weather
+              🧮 26 Calculators
             </button>
             <button
               onClick={() => handleNav('markets')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'markets' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'markets' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              📊 {t('markets')}
+              📊 AgriMarket Place
+            </button>
+            <button
+              onClick={() => handleNav('messages')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'messages' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
+            >
+              💬 Direct Messages
             </button>
             <button
               onClick={() => handleNav('ai-assistant')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'ai-assistant' ? 'bg-emerald-500 text-emerald-950 font-bold' : 'bg-emerald-950/60 text-emerald-100'}`}
+              className={`p-2.5 rounded-xl text-left font-bold cursor-pointer transition ${
+                currentPage === 'ai-assistant' ? 'bg-emerald-500 text-emerald-950 shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
               🤖 AI Daktari
             </button>
             <button
-              onClick={() => handleNav('calculators')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'calculators' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('crops')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'crops' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              🧮 Calculators
+              🌾 Crops Guide
             </button>
             <button
-              onClick={() => handleNav('farm-manager')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'farm-manager' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('livestock')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'livestock' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              📋 Farm Records
+              🐄 Livestock Care
             </button>
             <button
-              onClick={() => handleNav('events')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'events' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('pests')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'pests' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              📅 {t('events')}
+              🐛 Pest Doctor
             </button>
             <button
-              onClick={() => handleNav('profile')}
-              className={`p-2.5 rounded-lg text-left font-medium ${currentPage === 'profile' ? 'bg-emerald-700 text-white' : 'bg-emerald-950/60 text-emerald-100'}`}
+              onClick={() => handleNav('weather')}
+              className={`p-2.5 rounded-xl text-left font-semibold cursor-pointer transition ${
+                currentPage === 'weather' ? 'bg-emerald-700 text-white shadow-xs' : 'bg-emerald-950/60 text-emerald-100 hover:bg-emerald-900'
+              }`}
             >
-              👨‍🌾 {t('profile')}
+              ⛅ Weather Radar
+            </button>
+          </div>
+
+          <div className="pt-2 border-t border-emerald-800/60 flex items-center justify-between text-xs text-emerald-300">
+            <button onClick={() => handleNav('about')} className="hover:text-white cursor-pointer">
+              About Platform
+            </button>
+            <span>•</span>
+            <button onClick={() => handleNav('legal')} className="hover:text-white cursor-pointer">
+              Kenya DPA 2019
+            </button>
+            <span>•</span>
+            <button onClick={() => handleNav('profile')} className="hover:text-white cursor-pointer">
+              Profile
             </button>
           </div>
         </div>

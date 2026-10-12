@@ -1,6 +1,6 @@
 {
   "name": "AgriKnowledge Hub",
-  "description": "Comprehensive agricultural advisory, farmer community feed, market prices, crop & livestock guides, and AI farm diagnostics for East Africa.",
+  "description": "Trusted Agricultural Knowledge. Stronger Farming. Better Markets. International agricultural knowledge, precision calculators, community baraza, and trade marketplace founded by Adams Kipkoech Kering.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

@@ -70,67 +70,79 @@ export const PhoneMockup: React.FC<PhoneMockupProps> = ({
         </div>
 
         {/* Bottom Navigation Dock in Mobile View */}
-        <div className="bg-white/95 backdrop-blur-md border-t border-stone-200 px-2 py-1.5 flex items-center justify-around shrink-0 z-30">
+        <div className="bg-white/95 backdrop-blur-md border-t border-stone-200 px-1.5 py-1.5 flex items-center justify-around shrink-0 z-30">
           <button
             onClick={() => setCurrentPage('community')}
-            className={`flex flex-col items-center py-1 px-2 rounded-xl transition ${
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
               currentPage === 'community'
                 ? 'text-[#183D29] font-bold'
                 : 'text-stone-400 hover:text-stone-700'
             }`}
           >
-            <Users className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">Feed</span>
+            <Users className="w-4 h-4" />
+            <span className="text-[9px] mt-0.5">Feed</span>
+          </button>
+
+          <button
+            onClick={() => setCurrentPage('reels')}
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
+              currentPage === 'reels'
+                ? 'text-amber-600 font-bold'
+                : 'text-stone-400 hover:text-stone-700'
+            }`}
+          >
+            <Sparkles className="w-4 h-4" />
+            <span className="text-[9px] mt-0.5">Reels</span>
           </button>
 
           <button
             onClick={() => setCurrentPage('home')}
-            className={`flex flex-col items-center py-1 px-2 rounded-xl transition ${
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
               currentPage === 'home'
                 ? 'text-[#183D29] font-bold'
                 : 'text-stone-400 hover:text-stone-700'
             }`}
           >
-            <Home className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">Home</span>
+            <Home className="w-4 h-4" />
+            <span className="text-[9px] mt-0.5">Home</span>
           </button>
 
           <button
-            onClick={() => setCurrentPage('ai-assistant')}
-            className={`flex flex-col items-center py-1 px-2 rounded-xl transition ${
-              currentPage === 'ai-assistant'
-                ? 'text-emerald-700 font-bold'
+            onClick={() => setCurrentPage('calculators')}
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
+              currentPage === 'calculators'
+                ? 'text-purple-700 font-bold'
                 : 'text-stone-400 hover:text-stone-700'
             }`}
           >
             <div className="p-1 rounded-full bg-emerald-100 text-emerald-800 -mt-2 shadow-xs">
-              <Cpu className="w-5 h-5" />
+              <Cpu className="w-4 h-4" />
             </div>
-            <span className="text-[10px] mt-0.5">AI Doctor</span>
+            <span className="text-[9px] mt-0.5">Tools</span>
           </button>
 
           <button
-            onClick={() => setCurrentPage('weather')}
-            className={`flex flex-col items-center py-1 px-2 rounded-xl transition ${
-              currentPage === 'weather'
+            onClick={() => setCurrentPage('messages')}
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
+              currentPage === 'messages'
                 ? 'text-[#183D29] font-bold'
                 : 'text-stone-400 hover:text-stone-700'
             }`}
           >
-            <CloudSun className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">Weather</span>
+            <Users className="w-4 h-4" />
+            <span className="text-[9px] mt-0.5">Chat</span>
           </button>
 
           <button
             onClick={() => setCurrentPage('profile')}
-            className={`flex flex-col items-center py-1 px-2 rounded-xl transition ${
+            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition cursor-pointer ${
               currentPage === 'profile'
                 ? 'text-[#183D29] font-bold'
                 : 'text-stone-400 hover:text-stone-700'
             }`}
           >
-            <User className="w-5 h-5" />
-            <span className="text-[10px] mt-0.5">Profile</span>
+            <User className="w-4 h-4" />
+            <span className="text-[9px] mt-0.5">Profile</span>
           </button>
         </div>
 

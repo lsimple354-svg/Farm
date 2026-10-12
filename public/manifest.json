@@ -1,0 +1,21 @@
+{
+  "id": "/",
+  "name": "AgriKnowledge Hub",
+  "short_name": "AgriHub",
+  "description": "Trusted Kenyan agricultural knowledge, 26 practical farm calculators, live commodity markets, and community advisory.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#183D29",
+  "background_color": "#F4F1EA",
+  "categories": ["agriculture", "business", "education", "productivity"],
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

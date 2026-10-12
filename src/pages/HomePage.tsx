@@ -98,92 +98,92 @@ export const HomePage: React.FC<HomePageProps> = ({
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           <button
-            onClick={() => setCurrentPage('crops')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between"
+            onClick={() => setCurrentPage('community')}
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <Sprout className="w-5 h-5" />
+              <Users className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-bold text-sm text-stone-900 group-hover:text-emerald-800">
-                Crops
+                AgriFeed
               </h3>
-              <p className="text-[11px] text-stone-500">Maize, tea, avocado</p>
+              <p className="text-[11px] text-stone-500">Peer Baraza & QA</p>
             </div>
           </button>
 
           <button
-            onClick={() => setCurrentPage('livestock')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-amber-500 hover:shadow-md transition text-left group flex flex-col justify-between"
+            onClick={() => setCurrentPage('reels')}
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-amber-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <Layers className="w-5 h-5" />
+              <Sparkles className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-bold text-sm text-stone-900 group-hover:text-amber-800">
-                Livestock
+                AgriReels
               </h3>
-              <p className="text-[11px] text-stone-500">Dairy, poultry, goats</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('pests')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-rose-500 hover:shadow-md transition text-left group flex flex-col justify-between"
-          >
-            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <ShieldAlert className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-stone-900 group-hover:text-rose-800">
-                Pest Doctor
-              </h3>
-              <p className="text-[11px] text-stone-500">Armyworm, Tuta, Blight</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('markets')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between"
-          >
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-stone-900 group-hover:text-emerald-800">
-                Markets
-              </h3>
-              <p className="text-[11px] text-stone-500">Eldoret, Nairobi, KCC</p>
-            </div>
-          </button>
-
-          <button
-            onClick={() => setCurrentPage('weather')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-sky-500 hover:shadow-md transition text-left group flex flex-col justify-between"
-          >
-            <div className="w-10 h-10 rounded-xl bg-sky-100 text-sky-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
-              <CloudSun className="w-5 h-5" />
-            </div>
-            <div>
-              <h3 className="font-bold text-sm text-stone-900 group-hover:text-sky-800">
-                Weather
-              </h3>
-              <p className="text-[11px] text-stone-500">7-Day county forecast</p>
+              <p className="text-[11px] text-stone-500">60s Farming Videos</p>
             </div>
           </button>
 
           <button
             onClick={() => setCurrentPage('calculators')}
-            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-purple-500 hover:shadow-md transition text-left group flex flex-col justify-between"
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-purple-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
           >
             <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
               <Calculator className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-bold text-sm text-stone-900 group-hover:text-purple-800">
-                Calculators
+                Calculators (26)
               </h3>
-              <p className="text-[11px] text-stone-500">Seed & fertilizer rates</p>
+              <p className="text-[11px] text-stone-500">Precision Field Math</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setCurrentPage('learning')}
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-stone-900 group-hover:text-emerald-800">
+                AgriAcademy
+              </h3>
+              <p className="text-[11px] text-stone-500">14 Verified Curriculums</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setCurrentPage('markets')}
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-stone-900 group-hover:text-emerald-800">
+                AgriMarket
+              </h3>
+              <p className="text-[11px] text-stone-500">Direct Produce Trade</p>
+            </div>
+          </button>
+
+          <button
+            onClick={() => setCurrentPage('ai-assistant')}
+            className="p-4 rounded-2xl bg-white border border-stone-200 hover:border-emerald-500 hover:shadow-md transition text-left group flex flex-col justify-between cursor-pointer"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-800 flex items-center justify-center mb-3 group-hover:scale-105 transition-transform">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-sm text-stone-900 group-hover:text-emerald-800">
+                AI Daktari
+              </h3>
+              <p className="text-[11px] text-stone-500">Smart Pest Diagnostics</p>
             </div>
           </button>
         </div>
